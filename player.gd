@@ -4,6 +4,7 @@ const SPEED = 300.0
 const dashspeed = 900.0
 var boost = 0.0
 var boost_direction = Vector2.ZERO
+var cooldown = 1.0
 
 func _ready():
 	return 0
@@ -15,16 +16,20 @@ func _physics_process(delta):
 	
 	var moveit = Input.get_vector("move_left","move_right","move_up","move_down")
 	var direction = Vector2(moveit.x,moveit.y)
+	
 	velocity.x = direction.x * SPEED
 	velocity.y = direction.y * SPEED
 	
-	if Input.is_action_just_pressed("dash"):
+	if cooldown > 0.0:
+		cooldown -= delta
+	
+	if Input.is_action_just_pressed("dash") and cooldown <= 0.0:
 		boost_direction = Input.get_vector("move_left","move_right","move_up","move_down")
 		boost = 0.15
+		cooldown = 1.0
+	
 	if boost > 0:
 		boost -= delta
 		velocity = boost_direction * 900.0
 	
-	print(moveit)
-	print(velocity)
 	move_and_slide()
