@@ -24,8 +24,10 @@ func _physics_process(delta):
 		cooldown -= delta
 	
 	if Input.is_action_just_pressed("dash") and cooldown <= 0.0:
-		boost_direction = Input.get_vector("move_left","move_right","move_up","move_down")
-		boost = 0.15
+		boost_direction = transform.x
+		if moveit.length() > 0:
+			boost_direction = moveit
+		boost = 0.15 
 		cooldown = 1.0
 	
 	if boost > 0:
