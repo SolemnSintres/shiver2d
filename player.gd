@@ -3,9 +3,9 @@ extends CharacterBody2D
 @onready var anchor = $"../Anchor"
 
 const SPEED = 300.0
-const dashspeed = 900.0
+const swing_base = 400.0
 
-var swingspeed = 400
+var swingspeed = 400.0
 var boost = 0.0
 var boost_direction = Vector2.ZERO
 var cooldown = 1.0
@@ -13,10 +13,6 @@ var swinging = false
 var rope_length = 0.0
 var swing_dir = 1.0
 var fling = Vector2.ZERO
-var drift = Vector2(300, 0)
-
-func _ready():
-	return 0
 
 func _physics_process(delta):
 	var gap = global_position.distance_to(get_global_mouse_position())
@@ -43,7 +39,6 @@ func _physics_process(delta):
 		else:
 			fling = velocity
 	
-	fling = fling.move_toward(Vector2.ZERO,300 * delta)
 	
 	## MOVEMENT ##
 	velocity.x = direction.x * SPEED
@@ -60,6 +55,8 @@ func _physics_process(delta):
 			boost_direction = moveit
 		boost = 0.15 
 		cooldown = 1.0
+		if swinging:
+			swingspeed = 900.0
 	
 	## ACTIVE DASH ##
 	if boost > 0:
@@ -70,6 +67,8 @@ func _physics_process(delta):
 	if swinging: 
 		velocity = rope.orthogonal().normalized() * swingspeed * swing_dir
 	
+	fling = fling.move_toward(Vector2.ZERO,500 * delta)
+	swingspeed = move_toward(swingspeed, swing_base, 400 * delta)
 	velocity += fling
 	move_and_slide()
 	
