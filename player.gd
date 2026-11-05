@@ -12,7 +12,8 @@ var cooldown = 1.0
 var swinging = false
 var rope_length = 0.0
 var swing_dir = 1.0
-
+var fling = Vector2.ZERO
+var drift = Vector2(300, 0)
 
 func _ready():
 	return 0
@@ -39,6 +40,10 @@ func _physics_process(delta):
 				swing_dir = 1.0
 			else:
 				swing_dir = -1.0
+		else:
+			fling = velocity
+	
+	fling = fling.move_toward(Vector2.ZERO,300 * delta)
 	
 	## MOVEMENT ##
 	velocity.x = direction.x * SPEED
@@ -65,6 +70,7 @@ func _physics_process(delta):
 	if swinging: 
 		velocity = rope.orthogonal().normalized() * swingspeed * swing_dir
 	
+	velocity += fling
 	move_and_slide()
 	
 	## NEW ROPE IS THE MEASUREMENT AFTER THE SWING. SO WE CAN KEEP THE DISTANCE EXACTLY THE SAME AND NOT INCREASE ##
