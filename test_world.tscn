@@ -33,3 +33,6 @@ texture = ExtResource("2_gy3sr")
 
 [node name="Anchor" type="Marker2D" parent="." unique_id=1910933402]
 position = Vector2(268, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="Anchor" unique_id=1780419146]
+texture = ExtResource("2_gy3sr")
