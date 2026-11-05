@@ -4,13 +4,14 @@ extends CharacterBody2D
 
 const SPEED = 300.0
 const dashspeed = 900.0
-const swingspeed = 400
 
+var swingspeed = 400
 var boost = 0.0
 var boost_direction = Vector2.ZERO
 var cooldown = 1.0
 var swinging = false
 var rope_length = 0.0
+var swing_dir = 1.0
 
 
 func _ready():
@@ -24,15 +25,20 @@ func _physics_process(delta):
 	if gap > 30 and not swinging:
 		look_at(get_global_mouse_position())
 	
+		## MOVEIT IS THE DIRECTION ##
+	var moveit = Input.get_vector("move_left","move_right","move_up","move_down")
+	var direction = Vector2(moveit.x,moveit.y)
+	
 	## SWING PRESSED ##
 	if Input.is_action_just_pressed("swing"):
 		swinging = not swinging
 		if swinging:
 			rope_length = rope.length()
-	
-	## MOVEIT IS THE DIRECTION ##
-	var moveit = Input.get_vector("move_left","move_right","move_up","move_down")
-	var direction = Vector2(moveit.x,moveit.y)
+			var rope_move_dir = moveit.dot(rope.orthogonal()) ##dot gives a positive if both go up and negative if they don't go the same direction
+			if rope_move_dir > 0:
+				swing_dir = 1.0
+			else:
+				swing_dir = -1.0
 	
 	## MOVEMENT ##
 	velocity.x = direction.x * SPEED
@@ -50,14 +56,14 @@ func _physics_process(delta):
 		boost = 0.15 
 		cooldown = 1.0
 	
-	## DASH SLOWS DOWN ##
+	## ACTIVE DASH ##
 	if boost > 0:
 		boost -= delta
 		velocity = boost_direction * 900.0
 	
-	## CALCULATE THE DISTANCE OF PLAYER TO ANCHOR ##
-	if swinging:
-		velocity = rope.orthogonal().normalized() * swingspeed
+	## SWINGING? OR NOT SWINGING ##
+	if swinging: 
+		velocity = rope.orthogonal().normalized() * swingspeed * swing_dir
 	
 	move_and_slide()
 	
