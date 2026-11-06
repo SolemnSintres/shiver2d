@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 @onready var anchor = $"../Anchor"
+@onready var ray = $RayCast2D
 
 const SPEED = 300.0
 const swing_base = 400.0
@@ -28,16 +29,19 @@ func _physics_process(delta):
 	
 	## SWING PRESSED ##
 	if Input.is_action_just_pressed("swing"):
-		swinging = not swinging
 		if swinging:
-			rope_length = rope.length()
-			var rope_move_dir = moveit.dot(rope.orthogonal()) ##dot gives a positive if both go up and negative if they don't go the same direction
+			swinging = false
+			fling = velocity
+		elif ray.is_colliding():
+			swinging = true
+			anchor.global_position = ray.get_collision_point()
+			var newnew_rope = global_position-anchor.global_position
+			rope_length = newnew_rope.length()
+			var rope_move_dir = moveit.dot(newnew_rope.orthogonal())
 			if rope_move_dir > 0:
 				swing_dir = 1.0
 			else:
 				swing_dir = -1.0
-		else:
-			fling = velocity
 	
 	
 	## MOVEMENT ##
@@ -47,6 +51,7 @@ func _physics_process(delta):
 	## DASH COOLDOWN STARTS WHEN ITS NOT ZERO ##
 	if cooldown > 0.0:
 		cooldown -= delta
+	
 	
 	## DASH ##
 	if Input.is_action_just_pressed("dash") and cooldown <= 0.0:

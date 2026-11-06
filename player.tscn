@@ -17,3 +17,6 @@ texture = ExtResource("2_onrkg")
 shape = SubResource("RectangleShape2D_onrkg")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=117347434]
+
+[node name="RayCast2D" type="RayCast2D" parent="." unique_id=1252109645]
+target_position = Vector2(600, 0)
