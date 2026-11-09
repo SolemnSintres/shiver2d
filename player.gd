@@ -1,6 +1,8 @@
 extends CharacterBody2D
 
 const SPEED = 300.0
+const TURN_RATE = 4.0
+const DASH_TIME = 0.3
 
 var boost = 0.0
 var boost_direction = Vector2.ZERO
@@ -30,12 +32,16 @@ func _physics_process(delta):
 		boost_direction = transform.x
 		if moveit.length() > 0:
 			boost_direction = moveit
-		boost = 0.15
+		boost = DASH_TIME
 		cooldown = 1.0
 	
 	## ACTIVE DASH ##
 	if boost > 0:
 		boost -= delta
-		velocity = boost_direction * 400.0
+		var progress = boost/DASH_TIME
+		velocity = boost_direction * 1200.0 * progress
+		var direct = global_position.direction_to(get_global_mouse_position())
+		var angleboost = boost_direction.angle_to(direct)
+		boost_direction = boost_direction.rotated(angleboost * TURN_RATE * delta) 
 	
 	move_and_slide()
