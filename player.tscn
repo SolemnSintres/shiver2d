@@ -6,6 +6,9 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_onrkg"]
 radius = 12.0
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_onrkg"]
+size = Vector2(32, 3)
+
 [node name="Player" type="CharacterBody2D" unique_id=1426326189]
 script = ExtResource("1_4flbx")
 
@@ -16,3 +19,9 @@ texture = ExtResource("2_onrkg")
 shape = SubResource("CircleShape2D_onrkg")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=117347434]
+
+[node name="Pin" type="Area2D" parent="." unique_id=2058860787]
+position = Vector2(40, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pin" unique_id=919299184]
+shape = SubResource("RectangleShape2D_onrkg")
